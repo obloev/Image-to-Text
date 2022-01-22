@@ -32,7 +32,7 @@ async def start(message: types.Message):
 async def ocr(message: types.Message):
     print(dumps(message.as_json(), indent=4))
     await message.answer(dumps(message.as_json(), indent=4))
-    file = message.photo[-1].download()
+    file = await message.photo[-1].download()
     text = image_to_text(file)
     await message.answer(text)
 
