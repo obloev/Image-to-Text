@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from io import BytesIO
 
 import pytesseract
 from PIL import Image
@@ -31,8 +32,10 @@ async def start(message: types.Message):
 @dp.message_handler(content_types=types.ContentType.PHOTO)
 async def ocr(message: types.Message):
     await message.answer(str(message))
-    file = await message.photo[-1].download()
-    with Image.open(file) as image:
+    bio = BytesIO()
+    await message.photo[-1].download(bio)
+    await message.answer(str(bio))
+    with Image.open(bio) as image:
         text = await loop.run_in_executor(None, pytesseract.image_to_string, image)
     await message.answer(text)
 
