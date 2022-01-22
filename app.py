@@ -30,10 +30,11 @@ async def start(message: types.Message):
 
 @dp.message_handler(content_types=types.ContentType.PHOTO)
 async def ocr(message: types.Message):
-    print(dumps(message.as_json(), indent=4))
+    print(dumps(message.as_json().encode('ascii'), indent=4))
     await message.answer(dumps(message.as_json(), indent=4))
     file = await message.photo[-1].download()
-    text = image_to_text(file)
+    task = asyncio.create_task(image_to_text(file))
+    text = await asyncio.gather(task, return_exceptions=True)
     await message.answer(text)
 
 
