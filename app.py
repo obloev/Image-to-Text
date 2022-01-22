@@ -13,8 +13,12 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot, loop=loop)
 
 
-def on_startup():
+async def on_startup():
     await bot.send_message(ADMIN_ID, 'Bot started ...')
+
+
+async def on_shutdown():
+    await bot.send_message(ADMIN_ID, 'Bot stopped ...')
 
 
 @dp.message_handler(commands=['start'])
@@ -31,4 +35,4 @@ async def ocr(message: types.Message):
 
 
 if __name__ == '__main__':
-    executor.start_polling(dp, on_startup=on_startup(), on_shutdown=None)
+    executor.start_polling(dp, on_startup=on_startup(), on_shutdown=on_shutdown)
