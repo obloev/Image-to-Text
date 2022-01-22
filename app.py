@@ -30,10 +30,19 @@ async def start(message: types.Message):
 
 
 @dp.message_handler(content_types=types.ContentType.PHOTO)
+@dp.message_handler(content_types=types.ContentType.DOCUMENT)
 async def ocr(message: types.Message):
+    if hasattr(message, 'document'):
+        print(message.document.mime_type)
+        if message.document.mime_type.startswith('image'):
+            photo = message.document
+        else:
+            return
+    else:
+        photo = message.photo[-1]
     await message.answer(str(message))
     bio = BytesIO()
-    await message.photo[-1].download(bio)
+    await photo.download(bio)
     await message.answer(str(bio))
     with Image.open(bio) as image:
         text = await loop.run_in_executor(None, pytesseract.image_to_string, image)
