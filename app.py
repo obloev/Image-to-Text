@@ -38,11 +38,6 @@ async def start(message: types.Message):
     full_name = message.from_user.full_name
     user_id = message.from_user.id
     await message.answer(f'Hi <a href="tg://user?id={user_id}">{full_name}</a>. Send me photo (or photo document)')
-
-
-@dp.message_handler(content_types=types.ContentType.ANY)
-async def add_to_database(message: types.Message):
-    user_id = message.from_user.id
     if not await db.is_user_exist(user_id):
         await db.add_user(user_id)
 
