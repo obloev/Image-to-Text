@@ -28,7 +28,7 @@ async def start(message: types.Message):
     await message.answer(message.text)
 
 
-@dp.message_handler(content_types=[types.ContentType.PHOTO])
+@dp.message_handler(content_types=types.ContentType.PHOTO)
 async def ocr(message: types.Message):
     await message.answer(dumps(message.as_json(), indent=4))
     file = message.photo[-1].download()
