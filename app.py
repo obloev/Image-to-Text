@@ -32,7 +32,7 @@ async def start(message: types.Message):
 @dp.message_handler(content_types=types.ContentType.PHOTO)
 @dp.message_handler(content_types=types.ContentType.DOCUMENT)
 async def ocr(message: types.Message):
-    if hasattr(message, 'document'):
+    if message.document:
         print(message.document.mime_type)
         if message.document.mime_type.startswith('image'):
             photo = message.document
