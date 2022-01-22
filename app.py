@@ -14,10 +14,15 @@ dp = Dispatcher(bot, loop=loop)
 
 
 def on_startup():
-    bot.send_message(ADMIN_ID, 'Bot started ...')
+    await bot.send_message(ADMIN_ID, 'Bot started ...')
 
 
-@dp.message_handler(content_types=[types.ContentTypes.PHOTO])
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    await message.answer(message.text)
+
+
+@dp.message_handler(content_types=[types.ContentType.PHOTO])
 async def ocr(message: types.Message):
     await message.answer(dumps(message.as_json(), indent=4))
     file = message.photo[-1].download()
