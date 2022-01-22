@@ -93,10 +93,12 @@ async def ocr(message: types.Message):
     else:
         photo = message.photo[-1]
     bio = BytesIO()
+    wait_message = await message.reply('Please wait')
     await photo.download(bio)
     with Image.open(bio) as image:
         text = await loop.run_in_executor(None, pytesseract.image_to_string, image)
-    await message.reply(f'{text}\n\n@ImageToTextOKBot')
+    await wait_message.delete()
+    await message.reply(f'{text}\n@ImageToTextOKBot')
 
 
 if __name__ == '__main__':
