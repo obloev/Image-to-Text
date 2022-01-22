@@ -14,7 +14,7 @@ from database import Database
 logging.basicConfig(level=logging.INFO)
 loop = asyncio.get_event_loop()
 
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=API_TOKEN, parse_mode='MarkdownV2')
 dp = Dispatcher(bot, loop=loop)
 db = Database()
 
@@ -35,7 +35,9 @@ async def on_shutdown(dispatcher):
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
-    await message.answer(message.text)
+    full_name = message.from_user.full_name
+    user_id = message.from_user.id
+    await message.answer(f'Hi [{full_name}](tg://user?id={user_id}). Send me photo (or photo document)')
 
 
 @dp.message_handler(content_types=types.ContentType.ANY)
