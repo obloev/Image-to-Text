@@ -1,10 +1,10 @@
 import asyncio
 import logging
-from json import dumps
 
+import pytesseract
+from PIL import Image
 from aiogram import Bot, Dispatcher, executor, types
 from config import API_TOKEN, ADMIN_ID
-from utils import image_to_text
 
 logging.basicConfig(level=logging.INFO)
 loop = asyncio.get_event_loop()
@@ -30,10 +30,10 @@ async def start(message: types.Message):
 
 @dp.message_handler(content_types=types.ContentType.PHOTO)
 async def ocr(message: types.Message):
-    await message.answer(message)
+    await message.answer(str(message))
     file = await message.photo[-1].download()
-    task = asyncio.create_task(image_to_text(file))
-    text = await asyncio.gather(task, return_exceptions=True)
+    with Image.open(file) as image:
+        text = await loop.run_in_executor(None, pytesseract.image_to_string, image)
     await message.answer(text)
 
 
